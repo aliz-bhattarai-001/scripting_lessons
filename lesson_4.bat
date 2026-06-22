@@ -1,56 +1,108 @@
-@REM This lesson covers Comparison operators and keywords
+:: This is for checking the properties of  FOR loop and stuff.
+:: FOR seems pretty powerful and versatile in batch scripting.
+:: So let's get to it now.
 
 @echo off
 
-::Starting 
-echo -- Successfully Started --
-echo.
+:: Basic iteration through list
 
-:: Input section
-set /p "num_1=Enter a number: "
-set /p "num_2=Enter another number: "
+:: do or DO
+:: for or FOR
+:: in or IN
 
-
-echo.
-
-::Comparison Section
-
-:: NOT ALLOWED > set /a "equ_res=%num_1% EQU %num_2%"
-:: /a only for arithmetic operations. EQU DIDN'T work here.
+:: However %% is required (i.e dual % req) and the Variable (%%V) is case sensitive unlike others
+:: %%V != %%v
+FOR %%V IN (apple banana  mango) DO echo %%V
 
 
-set "is_equal=0"
+:: Looping through a range of numbers
 
-if %num_1% EQU %num_2% (
-    set "is_equal=1"
+:: /L to speciffy that the in represents a range of numbers to loop through
+:: syntax : FOR /L %%variable IN (start, step, end) DO command
+:: step -ve means to count backwards.
+
+:: Counting : ascending order
+FOR /L %%i IN (1, 2, 10) DO (
+    echo Count is %%i
 )
 
-if %is_equal% EQU 1 (
-    echo The numbers are equal.
-) else if %num_1% GTR %num_2% ( 
-    echo %num_1% ^> %num_2%
-) else (
-    echo %num_2% ^> %num_1%
+:: Counting : descending order.
+FOR /L %%i IN (10, -2, 1) DO (
+    echo %%i is the count.
 )
 
-:: EQU -> equals to
-:: NEQ -> Not equals to
-:: GTR -> Greater than
-:: LSS -> Less than
-:: LEQ -> Less than or equals to
-:: GEQ -> Greater than or equals to
 
-:: ^ sign necessary with > sign to specify that I am using that symbol literally 
-:: and not trying to store num_1 within a file having value of num_2
+:: Echoes all .bat files within the current directory
+FOR %%A IN (*.bat) DO (
+    echo %%A
+)
+
+:: Echoes all cpp files in one directory above from this working directory (if any)
+:: does not look for .cpp files within the directories. 
+:: only lookup in the same level as specified.
+FOR %%A IN (../*.cpp) DO (
+    echo %%A
+)
+echo.
+
+:: for multiple type files 
+echo -- From dual loop --
+:: works even better than expected.
+FOR %%A IN (*.bat ../*.cpp) DO (
+    echo %%A
+)
+echo.
+
+:: FOR recursive search : syntax = FOR /R [path] %%A IN (pattern) DO command
+
+:: works but I don't want a lag while experimenting.
+
+@REM echo -- From recursive part --
+@REM FOR /R D:\personal_files %%A IN (*.bat) DO (
+@REM     echo %%A
+@REM )
+:: TOOK some seconds but worked just fine.
+
+:: to recurse only through the current directory:
+:: for /R %%A in (*.ext) do echo %%A 
+:: i.e remove the [path] portion as a whole.
 
 
-:: What do == >= <= and > and < do then?
 
-:: > is used to insert within file. so using that individually has its quirk
-:: Also comparison between strings even if as variables must be done within ""
-:: eg: "%Character%" LSS "C" compares the value within character var within "C"
+:: Normal for only sees files
+:: /D flag used for directories action
+echo -- Folders --
+FOR /D %%A IN (../*) DO (
+    echo %%A
+)
+echo.
+
+:: Recursive folder traversal
+:: also works but I just don't want to clutter the terminal with the output.
+
+@REM echo -- Recursive Traversal --
+@REM for /R %%A in (../) do echo %%~dpA
+
+:: %%~dA : shows the drive name only for my case -> D:
+:: %%~pA : shows only the path of the folder excluding the drive name
+:: %%~dpA: shows both the drive name and the path alongside.
 
 
-:: Checking if a file exists or not (uppercase or lowecase commands are equivalent it seems)
-if exist "something.txt" echo Yes file found!
-else if not exist echo Nope file not found
+:: What each addition does to a file echo
+:: p -> path
+:: n -> name
+:: x -> file extension
+:: d -> drive name
+:: a -> attributes
+:: z -> File size
+:: t -> last modified time
+:: nx -> name + extension
+:: dp -> drive + path
+:: f -> full path
+
+:: for folders /directories x and z become basically useless 
+:: s -> gives short path of that dir
+:: fs -> full short path of that dir
+
+:: ~ -> itself removes the quotes around the variable value before performing any modifications
+:: via modifiers
