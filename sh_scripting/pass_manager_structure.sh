@@ -21,4 +21,5 @@ echo "Folder Structure Created Successfully."
 cd $cppProjectDir/$folderName
 
 echo "Current Directory: " 
+
 pwd
